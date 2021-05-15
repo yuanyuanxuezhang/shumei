@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <title>Slideshow with Animated Circular </title>
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+  <link rel="stylesheet" href="./layui-v2.6.1/layui/css/layui.css">
+  <script src="jquery-1.12.3.min.js"></script>
+  <link rel="stylesheet" href="layui-v2.6.1/layui/css/layui.css">
+  <script src="layui-v2.6.1/layui/layui.js"></script>
+  <script src="jQuery.min.js"></script>
+  <style>
+    a {
+      text-decoration: none;
+    }
+
+    h1 {
+      color:white;
+    }
+
+    p {
+      color: white;
+    }
+  </style>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+
+      color: #FFFFFF;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+
+    }
+
+
+    body header {
+      background-color: transparent;
+      font-family: 'Oswald', sans-serif;
+      position: fixed;
+      display: block;
+      width: 100%;
+      height: 48px;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 90;
+    }
+
+    body header .header-inner {
+      padding: 12px 1.5%;
+    }
+
+    body header .header-inner .logo {
+      position: relative;
+      display: inline;
+      width: auto;
+      height: auto;
+      float: left;
+    }
+
+    body header .header-inner .logo a {
+      position: relative;
+      display: inline;
+      width: auto;
+      height: auto;
+      color: #FFFFFF;
+      outline: 0px none;
+      outline: 0px;
+      text-decoration: none;
+      transition: all 0.35s ease-in-out;
+      text-transform: uppercase;
+    }
+
+    body header .header-inner .logo a:hover {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    body header .header-inner .logo a span {
+      font-weight: 700;
+    }
+
+    body header .header-inner nav {
+      position: relative;
+      display: inline;
+      margin: 0;
+      padding: 0;
+      list-type-style: none;
+      float: right;
+    }
+
+    body header .header-inner nav li {
+      position: relative;
+      display: inline;
+      margin-left: 16px;
+    }
+
+    body header .header-inner nav li a {
+      font-family: 'Oswald', sans-serif;
+      position: relative;
+      font-size: 13px;
+      color: #FFFFFF;
+      text-decoration: none;
+      line-height: 24px;
+      transition: all 0.35s ease-in-out;
+    }
+
+    body header .header-inner nav li a span {
+      position: relative;
+      z-index: 2;
+    }
+
+    body header .header-inner nav li a:hover {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    body section.slideshow {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      height: 100vh;
+      margin: 0 auto;
+      visibility: hidden;
+      overflow: hidden;
+    }
+
+    body section.slideshow ul.navigation {
+      position: absolute;
+      display: block;
+      width: 640px;
+      height: 640px;
+      padding: 0;
+      margin: 0;
+      left: -230px;
+      top: 50%;
+      margin-top: -320px;
+      z-index: 10;
+    }
+
+    body section.slideshow ul.navigation li.navigation-item {
+      position: absolute;
+      display: inline-block;
+      overflow: hidden;
+      width: 120px;
+      height: 120px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: border 0.6s ease-in-out;
+    }
+
+    body section.slideshow ul.navigation li.navigation-item .rotate-holder {
+      position: fixed;
+      display: block;
+      width: 0;
+      height: 0;
+      left: -9999px;
+      top: -9999px;
+    }
+
+    body section.slideshow ul.navigation li.navigation-item .background-holder {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: 50%;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+    }
+
+    body section.slideshow ul.navigation li.navigation-item:hover .background-holder {
+      opacity: 0.75;
+    }
+
+    body section.slideshow ul.navigation li.navigation-item.active .background-holder {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    body section.slideshow .detail {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 8;
+    }
+
+    body section.slideshow .detail .detail-item {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    body section.slideshow .detail .detail-item .headline {
+      position: absolute;
+      display: block;
+      width: 100%;
+      max-width: calc(100% - 480px);
+      height: 126px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: visible;
+      white-space: nowrap;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+
+    body section.slideshow .detail .detail-item .headline .letter {
+      font-family: 'Oswald', sans-serif;
+      position: relative;
+      display: inline-block;
+      opacity: 0;
+      visibility: hidden;
+      color: #FFFFFF;
+      font-size: 132px;
+      line-height: 110px;
+      font-weight: 900;
+      font-kerning: none;
+      white-space: nowrap;
+      box-sizing: border-box;
+      text-transform: uppercase;
+    }
+
+    body section.slideshow .detail .detail-item .background {
+      position: absolute;
+      display: block;
+      width: 100%;
+      width: calc(100% + 100px);
+      height: 100%;
+      height: calc(100% + 100px);
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: visible;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      z-index: 1;
+    }
+
+    body section.slideshow .detail .detail-item .background::before {
+      content: "";
+      background: linear-gradient(to right, black 0%, rgba(0, 0, 0, 0) 90%);
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+
+    }
+
+    body section.slideshow .detail .detail-item.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    body{
+      background-image: url(背景图片.jpg); 
+      width: 100%;
+      height: 100%;
+
+    }
+    
+    p {
+      padding-top: 10px;
+    }
+    .pic{
+      width: 1025px;
+      height: 576px;
+      transition: all 2s;
+    }
+    .pic:hover{
+      cursor: crosshair;
+      transform: scale(1.2);
+
+    }
+    /* .pic1{
+      width: 800px;
+      height: 500px;
+      transition: all 2s;
+    }
+    .pic1:hover{
+      cursor: crosshair;
+      transform: scale(1.5);
+
+    } */
+  </style>
+
+
+</head>
+
+<body >
+
+  <section class="slideshow">
+
+    <audio style="z-index: 999999999999999999999999999999999999999999;" loop src='千年破晓 - 故梦 (琵琶版).mp3' id="audio" autoplay preload="auto"></audio>
+   
+
+    <ul class="navigation">
+
+      <li class="navigation-item active" id="onepic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(总封面.jpg);"></span>
+      </li>
+      <li class="navigation-item" id="twopic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(秦汉.jpg);"></span>
+      </li>
+
+      <li class="navigation-item" id="threepic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(魏晋.jpg);"></span>
+      </li>
+
+      <li class="navigation-item" id="fourpic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(南北朝.jpg);"></span>
+      </li>
+
+      <li class="navigation-item" id="fivepic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(隋唐.jpg);"></span>
+      </li>
+
+      <li class="navigation-item" id="sixpic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(宋.jpg);"></span>
+      </li>
+
+      <li class="navigation-item" id="sevenpic">
+        <span class="rotate-holder"></span>
+        <span class="background-holder" style="background-image: url(明23.jpg);"></span>
+      </li>
+
+    </ul>
+
+    <div class="detail">
+
+      <div class="content-right"><ul id="content_news_list">
+        <div class="detail-item active">
+          <div class="headline">CHINA</div>
+          <div class="background" style="background-image: url(总封面.jpg); height: 100%; "></div>
+          <div class="background"
+            style="background-image: url(总封面.jpg); height: 100%; background-size: cover; background-position: center;">
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">秦汉</a>
+            </li>
+          </div>
+          <div class="background" style="background-image: url(秦汉.jpg);height: 100%; "></div>
+        </div>
+
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">魏晋</a>
+            </li>
+          </div>
+          <div class="background" style="background-image: url(魏晋.jpg);height: 100%; "></div>
+        </div>
+
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">南北朝</a>
+            </li>
+          </div>
+          <div class="background" style="background-image: url(南北朝.jpg);height: 100%; "></div>
+        </div>
+
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">隋唐</a>
+            </li>
+            </div>
+          <div class="background" style="background-image: url(隋唐.jpg);height: 100%;"></div>
+        </div>
+
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">宋朝</a>
+            </li>
+            </div>
+          <div class="background" style="background-image: url(宋.jpg);height: 100%; "></div>
+        </div>
+
+        <div class="detail-item">
+          <div class="headline">
+            <li>
+              <a href="">明朝</a>
+            </li>
+            </div>
+          <div class="background" style="background-image: url(明23.jpg);height: 100%; "></div>
+        </div>
+      </ul>       
+      </div>
+    </div>
+  </section>
+
+ 
+  
+
+  <div id="lyz1" hidden>
+    
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px;">
+      <div class="layui-col-md9">
+        <img src="总封面.jpg" alt="" style="width: 899px; height: 589px;; ">
+      </div>
+      <div class="layui-col-md3">
+        <a>
+          <p><b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <b
+              style="font-size: 20px; display: inline-block;"> 越&nbsp;玉&nbsp;楼&nbsp;帐</b></p>
+          <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">罗&nbsp;刻&nbsp;头&nbsp;底</b></p>
+          <p> <b style="font-size: 30px; display: inline-block;">秦&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">衫&nbsp;麒&nbsp;曲&nbsp;吹</b></p>
+          <p> <b style="font-size: 30px; display: inline-block;">汉&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">袂&nbsp;麟&nbsp;宴&nbsp;笙</b></p>
+          <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">迎&nbsp;腰&nbsp;仙&nbsp;香</b></p>
+          <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">春&nbsp;带&nbsp;人&nbsp;雾</b></p>
+          <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">风&nbsp;红&nbsp;红&nbsp;浓</b></p>
+        </a>
+
+      </div>
+    </div>
+
+
+    <div class="layui-row" style="margin-top: 150px; margin-left: 400px;">
+
+      <div class="layui-col-md3">
+        <a >
+          <p><b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">头&nbsp;耳&nbsp;缃&nbsp;紫&nbsp;行&nbsp;下&nbsp;少&nbsp;脱&nbsp;耕&nbsp;锄&nbsp;来&nbsp;但&nbsp;</b>
+          </p>
+          <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">上&nbsp;中&nbsp;绮&nbsp;绮&nbsp;者&nbsp;担&nbsp;年&nbsp;帽&nbsp;者&nbsp;者&nbsp;归&nbsp;坐&nbsp;</b>
+          </p>
+          <p> <b style="font-size: 30px; display: inline-block;">陌&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">倭&nbsp;明&nbsp;为&nbsp;为&nbsp;见&nbsp;捋&nbsp;见&nbsp;著&nbsp;忘&nbsp;忘&nbsp;相&nbsp;观&nbsp;</b>
+          </p>
+          <p> <b style="font-size: 30px; display: inline-block;">上&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">堕&nbsp;月&nbsp;下&nbsp;上&nbsp;罗&nbsp;髭&nbsp;罗&nbsp;鞒&nbsp;其&nbsp;怒&nbsp;罗&nbsp;坐&nbsp;</b>
+          </p>
+          <p> <b style="font-size: 30px; display: inline-block;">桑&nbsp;</b><b
+              style="font-size: 20px; display: inline-block;">髻&nbsp;珠&nbsp;裙&nbsp;襦&nbsp;敷&nbsp;须&nbsp;敷&nbsp;头&nbsp;犁&nbsp;锄&nbsp;怨&nbsp;敷&nbsp;</b>
+          </p>
+          <!-- <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b style="font-size: 20px; display: inline-block;">上&nbsp;中&nbsp;绮&nbsp;绮&nbsp;者&nbsp;担&nbsp;年&nbsp;帽&nbsp;者&nbsp;者&nbsp;归&nbsp;坐&nbsp;</b></p>
+       <p> <b style="font-size: 30px; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><b style="font-size: 20px; display: inline-block;">上&nbsp;中&nbsp;绮&nbsp;绮&nbsp;者&nbsp;担&nbsp;年&nbsp;帽&nbsp;者&nbsp;者&nbsp;归&nbsp;坐&nbsp;</b></p> -->
+      </div>
+
+      <div class="layui-col-md9">
+        <img src="总封面.jpg" alt="" style="width: 899px; height: 589px; ">
+      </div>
+    </div>
+
+
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md7">
+        <img src="总封面.jpg" alt="" style="width: 899px; height: 589px; ">
+      </div>
+      <div class="layui-col-md4">
+        <a target="_self"><b>
+            <h1 style="font-size: 25px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《缭绫》</h1>
+          </b>
+          <p style="font-size: 20px;margin-left: 40px;">缭绫缭绫何所似，不似罗绡与纨绮。</p>
+          <p style="font-size: 20px;margin-left: 40px;">应似天台月明前，四十五尺瀑布泉。</p>
+          <p style="font-size: 20px;margin-left: 40px;">中有文章又奇绝，地铺白烟花簇雪。</p>
+          <p style="font-size: 20px;margin-left: 40px;">织者何人衣者谁，越溪寒女汉宫姬。</p>
+          <p style="font-size: 20px;margin-left: 40px;">去年中使宣口敕，天上取样人间织。</p>
+          <p style="font-size: 20px;margin-left: 40px;">织为云外秋雁行，染作江南春水色。</p>
+          <p style="font-size: 20px;margin-left: 40px;">广裁衫袖长制裙，金斗熨波刀翦纹。</p>
+          <p style="font-size: 20px;margin-left: 40px;">异彩奇文相隐映，转侧看花花不定。</p>
+          <p style="font-size: 20px;margin-left: 40px;">昭阳舞人恩正深，春衣一对直千金。</p>
+          <p style="font-size: 20px;margin-left: 40px;">汗沾粉污不再著，曳土蹋泥无惜心。</p>
+          <p style="font-size: 20px;margin-left: 40px;">缭绫织成费功绩，莫比寻常缯与帛。</p>
+          <p style="font-size: 20px;margin-left: 40px;">丝细缲多女手疼，扎扎千声不盈尺。</p>
+          <p style="font-size: 20px;margin-left: 40px;">昭阳殿里歌舞人。若见织时应也惜。</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="lyz2" hidden>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <!-- <a href="http://www.baidu.com" target="_blank">百度_blank</a><br/> -->
+      <a  target="_blank">
+        <div class="layui-col-md7">
+          <img src="../po/秦汉/秦汉-1.jpg" alt="" class="pic">
+        </div>
+        <div class="layui-col-md4" style="margin-top: 180px;">
+          <a href="" target="_blank"><b>
+              <!-- <h1 style="font-size: 25px; margin-left: 30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《秦宫诗》</h1> -->
+            </b>4
+            <p style="font-size: 20px;margin-left: 200px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;越&nbsp;&nbsp;罗&nbsp;&nbsp;衫&nbsp;&nbsp;袂&nbsp;&nbsp;迎&nbsp;&nbsp;春&nbsp;&nbsp;风，</p>
+            <br/>
+            <p style="font-size: 20px;margin-left: 200px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;玉&nbsp;&nbsp;刻&nbsp;&nbsp;麒&nbsp;&nbsp;麟&nbsp;&nbsp;腰&nbsp;&nbsp;带&nbsp;&nbsp;红。</p>
+            <br/>
+            <p style="font-size: 20px;margin-left: 200px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;楼&nbsp;&nbsp;头&nbsp;&nbsp;曲&nbsp;&nbsp;宴&nbsp;&nbsp;仙&nbsp;&nbsp;人&nbsp;&nbsp;语，</p>
+            <br/>
+            <p style="font-size: 20px;margin-left: 200px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;帐&nbsp;&nbsp;底&nbsp;&nbsp;吹&nbsp;&nbsp;笙&nbsp;&nbsp;香&nbsp;&nbsp;雾&nbsp;&nbsp;浓。</p>
+          </div>
+      </a>
+    </div>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <a  target="_blank">
+        <div class="layui-col-md4" style="margin-top: 150px;">
+          <b>
+            <!-- <h1 style="font-size: 25px;">《赤壁怀古》</h1> -->
+          </b>
+          <p style="font-size: 20px;margin-left: 15px;">遥想公瑾当年，</p>
+          <br/>
+          <p style="font-size: 20px;margin-left: 15px;">小乔初嫁了，雄姿英发。</p>
+          <br/>
+          <p style="font-size: 20px;margin-left: 15px;">羽扇纶巾，谈笑间，</p>
+          <br/>
+          <p style="font-size: 20px;margin-left: 15px;">樯橹灰飞烟灭。</p>
+          <br/>
+        </div>
+        <div class="layui-col-md7">
+          <img src="../po/秦汉/秦汉-2.jpg" alt="" class="pic">
+        </div>
+      </a>
+    </div>
+
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <!-- <a href="http://www.baidu.com" target="_blank">百度_blank</a><br/> -->
+      <a  target="_blank">
+        <div class="layui-col-md7">
+          <img src="../po/秦汉/秦汉-3.jpg" alt="" class="pic">
+        </div>
+        <div class="layui-col-md4" style="margin-top: 150px;margin-left: 30px;">
+          <a href="1.html" target="_blank"><b>
+             <!-- <h1 style="font-size: 25px;">《秦风·衣》</h1> -->
+            </b>
+           <p style="font-size: 20px;margin-left: 200px;">岂曰无衣？与子同袍。</p>
+            <p style="font-size: 20px;margin-left: 200px;">王于兴师，修我戈矛。与子同仇！</p>
+            <p style="font-size: 20px;margin-left: 200px;">岂曰无衣？与子同泽。</p>
+            <p style="font-size: 20px;margin-left: 200px;">王于兴师，修我矛戟。与子偕作！</p>
+            <p style="font-size: 20px;margin-left: 200px;">岂曰无衣？与子同裳。</p>
+            <p style="font-size: 20px;margin-left: 200px;">王于兴师，修我甲兵。与子偕行！</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+
+
+
+
+  <div id="lyz3" hidden>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <a  target="_blank">
+        <div class="layui-col-md7">
+          <!-- <div class="layui-carousel" id="test1">
+            <div carousel-item>
+                <div><img src="魏晋-1.jpg" style="width: 100%px; height: 100%px; "/></div>
+                <div><img src="魏晋-2.jpg" style="width: 899px; height: 500px; "/></div>
+            </div>
+          </div> -->
+          <img src="魏晋-1.jpg" alt="" class="pic">
+        </div>
+        <div class="layui-col-md4" style="margin-left: 100px;margin-top: 160px;">
+          <!-- <b>
+            <h1 style="font-size: 25px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《洛神赋》</h1>
+          </b> -->
+
+          <p style="font-size: 20px;margin-left: 200px;">披罗衣之璀粲兮，</p>
+          <p style="font-size: 20px;margin-left: 200px;">珥瑶碧之华琚。</p>
+          <p style="font-size: 20px;margin-left: 200px;">戴金翠之首饰，</p>
+          <p style="font-size: 20px;margin-left: 200px;">缀明珠以耀躯。</p>
+          <p style="font-size: 20px;margin-left: 200px;">践远游之文履，</p>
+          <p style="font-size: 20px;margin-left: 200px;">曳雾绡之轻裾，</p>
+          <p style="font-size: 20px;margin-left: 200px;">微幽兰之芳蔼兮，</p>
+          <p style="font-size: 20px;margin-left: 200px;">步踟蹰于山隅。</p>
+
+
+
+        </div>
+      </a>
+    </div>
+
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <a  target="_blank">
+        <div class="layui-col-md4" style="margin-top: 100px;">
+          <!-- <b>
+            <h1 style="font-size: 25px; margin-left: 40px;">
+              《国风·邶风·绿衣》</h1>
+          </b> -->
+          <p style="font-size: 20px;margin-left: 50px;">绿兮衣兮，绿衣黄裹。</p>
+          <p style="font-size: 20px;margin-left: 50px;">心之忧矣，曷维其已！</p>
+          <p style="font-size: 20px;margin-left: 50px;">绿兮衣兮，绿衣黄裳。</p>
+          <p style="font-size: 20px;margin-left: 50px;">心之忧矣，曷维其亡！</p>
+          <p style="font-size: 20px;margin-left: 50px;">绿兮丝兮，女所治兮。</p>
+          <p style="font-size: 20px;margin-left: 50px;">我思古人，俾无訧兮！</p>
+          <p style="font-size: 20px;margin-left: 50px;">絺兮绤兮，凄其以风。</p>
+          <p style="font-size: 20px;margin-left: 50px;">我思古人，实获我心！</p>
+        </div>
+        <div class="layui-col-md7">
+          <img src="魏晋-2.jpg" alt=""class="pic">
+        </div>
+
+      </a>
+
+    </div>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <a  target="_blank">
+        <div class="layui-col-md7">
+          <!-- <div class="layui-carousel" id="test1">
+            <div carousel-item>
+                <div><img src="魏晋-1.jpg" style="width: 100%px; height: 100%px; "/></div>
+                <div><img src="魏晋-2.jpg" style="width: 899px; height: 500px; "/></div>
+            </div>
+          </div> -->
+          <img src="魏晋-3.jpg" alt="" class="pic">
+        </div>
+        <div class="layui-col-md4" style="margin-top: 140px; margin-left: 120px;">
+          <!-- <b>
+            <h1 style="font-size: 25px;">
+              《诗经·郑风·子衿》</h1>
+          </b> -->
+
+          <p style="font-size: 20px;margin-left: 150px;">青青子衿，悠悠我心。</p>
+          <p style="font-size: 20px;margin-left: 150px;">纵我不往，子宁不嗣音？</p>
+          <p style="font-size: 20px;margin-left: 150px;">青青子佩，悠悠我思。</p>
+          <p style="font-size: 20px;margin-left: 150px;">纵我不往，子宁不来？</p>
+          <p style="font-size: 20px;margin-left: 150px;">挑兮达兮，在城阙兮。</p>
+          <p style="font-size: 20px;margin-left: 150px;">一日不见，如三月兮！</p>
+
+
+
+        </div>
+      </a>
+    </div>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <a  target="_blank">
+        <div class="layui-col-md4"style="margin-top: 180px;">
+          <!-- <b>
+            <h1 style="font-size: 25px;margin-left: 25px;">
+            《子夜四时歌》</h1>
+          </b> -->
+          <p style="font-size: 20px;margin-left: 40px;">娉婷扬袖舞，</p>
+          <p style="font-size: 20px;margin-left: 40px;">阿那曲身轻。</p>
+          <p style="font-size: 20px;margin-left: 40px;">照灼兰光在，</p>
+          <p style="font-size: 20px;margin-left: 40px;">容冶春风生。</p>
+        </div>
+        <div class="layui-col-md7">
+          <img src="魏晋-大袖衫.jpg" alt=""class="pic">
+        </div>
+
+      </a>
+
+    </div>
+  </div>
+
+  <div id="lyz4" hidden>
+    <a  target="_blank">
+      <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+        <div class="layui-col-md7">
+          <img src="南北朝/南北-1.jpg" alt="" class="pic">
+        </div>
+        <div class="layui-col-md4" style="margin-top: 150px;">
+          <!-- <b>
+            <h1 style="font-size: 25px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《鹧鸪天》</h1>
+          </b> -->
+          <p style="font-size: 20px;margin-left: 350px;">京洛风流绝代人。</p>
+          <p style="font-size: 20px;margin-left: 350px;">因何风絮落溪津。</p>
+          <p style="font-size: 20px;margin-left: 350px;">笼鞋浅出鸦头袜，</p>
+          <p style="font-size: 20px;margin-left: 350px;">知是凌波缥缈身。</p>
+          <p style="font-size: 20px;margin-left: 350px;">红乍笑，绿长嚬。</p>
+          <p style="font-size: 20px;margin-left: 350px;">与谁同度可怜春。</p>
+          <p style="font-size: 20px;margin-left: 350px;">鸳鸯独宿何曾惯，</p>
+          <p style="font-size: 20px;margin-left: 350px;">化作西楼一缕云。</p>
+
+        </div>
+      </div>
+      <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+        <div class="layui-col-md4" style="margin-top: 200px;">
+          <!-- <b>
+            <h1 style="font-size: 25px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《红蔷薇》</h1>
+          </b> -->
+          <p style="font-size: 20px;margin-left: 50px;">晓啼珠露浑无力，</p>
+          <p style="font-size: 20px;margin-left: 50px;">绣簇罗襦不著行。</p>
+          <p style="font-size: 20px;margin-left: 50px;">若缀寿阳公主额，</p>
+          <p style="font-size: 20px;margin-left: 50px;">六宫争肯学梅妆。</p>
+        </div>
+        <div class="layui-col-md7">
+          <img src="南北朝/南北-2.jpg" alt="" class="pic">
+        </div>
+      </div>
+    </a>
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md7">
+        <img src="南北朝/南北-3.jpg" alt="" class="pic">
+      </div>
+      <div class="layui-col-md4" style="margin-top: 150px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《西洲曲》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 350px;">采莲南塘秋，</p>
+        <p style="font-size: 20px;margin-left: 350px;">莲花过人头。</p>
+        <p style="font-size: 20px;margin-left: 350px;">低头弄莲子，</p>
+        <p style="font-size: 20px;margin-left: 350px;">莲子清如水。</p>
+        <p style="font-size: 20px;margin-left: 350px;">置莲怀袖中，</p>
+        <p style="font-size: 20px;margin-left: 350px;">莲心彻底红。</p>
+        <p style="font-size: 20px;margin-left: 350px;">忆郎郎不至，</p>
+        <p style="font-size: 20px;margin-left: 350px;">仰首望飞鸿。</p>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="lyz5" hidden>
+    <a  target="_blank">
+    <div class="layui-row" style="margin-top: 150px;margin-left: 200px; ">
+      <div class="layui-col-md7">
+        <!-- <img src="隋唐/交领大袖襦1.jpg" alt="" style="width: 800px; height: 800px; "> -->
+        <div class="layui-carousel lyy520" id="text8" >
+            <div carousel-item>
+                <div><img class="pic1" src="隋唐/隋唐-1.jpg" style="width: 1025px; height: 576px; "/></div>
+                <div><img class="pic1" src="隋唐/隋唐-2.jpg" style="width: 1025px; height: 576px; "/></div>
+                <div><img class="pic1" src="隋唐/隋唐-3.jpg" style="width: 1025px; height: 576px; "/></div>
+                <div><img class="pic1" src="隋唐/隋唐-4.jpg" style="width: 1025px; height: 576px; "/></div>
+            </div>
+          </div>
+      </div>
+      <div class="layui-col-md4" style="margin-top: 190px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《丽人行》
+          </h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 230px;">三月三日天气新，长安水边多丽人。</p>
+        <p style="font-size: 20px;margin-left: 230px;">态浓意远淑且真，肌理细腻骨肉匀。</p>
+        <p style="font-size: 20px;margin-left: 230px;">绣罗衣裳照暮春，蹙金孔雀银麒麟。</p>
+        <p style="font-size: 20px;margin-left: 230px;">头上何所有？翠为荷叶垂鬓唇；</p>
+        <p style="font-size: 20px;margin-left: 230px;">背后何所见？珠压腰际稳称身。</p>
+      </div>
+    </div>
+
+    <div class="layui-row" style="margin-top: 180px;margin-left: 300px; ">
+      <div class="layui-col-md4" style="margin-top: 200px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《赠张云容舞》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 50px;">云想衣裳花想容，</p>
+        <p style="font-size: 20px;margin-left: 50px;">春风拂槛露华浓。</p>
+        <p style="font-size: 20px;margin-left: 50px;">若非群玉山头见，</p>
+        <p style="font-size: 20px;margin-left: 50px;">会向瑶台月下逢。</p>
+      </div>
+      <div class="layui-col-md7">
+        <!-- <img src="隋唐/扩袖衫衫裙1.jpg" alt="" style="width: 800px; height: 800px; "> -->
+        <div class="layui-carousel lyy520" id="text7">
+          <div carousel-item>
+              <div><img class="pic1 " src="隋唐/隋唐-5.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1 " src="隋唐/隋唐-6.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1 " src="隋唐/隋唐-7.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1 " src="隋唐/隋唐-8.jpg" style="width: 1025px; height: 576px; "/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  </div>
+
+  <div id="lyz6" hidden>
+    <a  target="_blank">
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md7" style="margin-right: 100px;">
+        <!-- <img src="宋朝/褙子2.jpg" alt="" style="width: 800px; height: 800px; "> -->
+        <div class="layui-carousel lyy520" id="text6">
+          <div carousel-item>
+              <div><img class="pic1" src="宋朝/交领襦裙.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1" src="宋朝/半臂1.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1" src="宋朝/宋裤.jpg" style="width: 1025px; height: 576px; "/></div>
+              <!-- <div><img src="隋唐/隋唐-8.jpg" style="width: 899px; height: 500px; "/></div> -->
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-md4" style="margin-top: 240px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《醉垂鞭》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 150px;">双蝶绣罗裙，东池宴，初相见。</p>
+        <p style="font-size: 20px;margin-left: 150px;">朱粉不深匀，闲花淡淡春。</p>
+        <p style="font-size: 20px;margin-left: 150px;">细看诸处好，人人道，柳腰身。</p>
+      </div>
+    </div>
+
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md4"style="margin-top: 200px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《出塞》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 50px;">涿州沙上饮盘桓，</p>
+        <p style="font-size: 20px;margin-left: 50px;">看舞春风小契丹。</p>
+        <p style="font-size: 20px;margin-left: 50px;">塞雨巧催燕泪落，</p>
+        <p style="font-size: 20px;margin-left: 50px;">蒙蒙吹湿汉衣冠。</p>
+      </div>
+      <div class="layui-col-md7">
+        <!-- <img src="宋朝/襕衫2.jpg" alt="" style="width: 589px; height: 889px; "> -->
+        <div class="layui-carousel " id="text5">
+          <div carousel-item>
+              <div><img class="pic1" src="宋朝/对襟襦裙.jpg" style="width:1025px; height: 576px; "/></div>
+              <div><img class="pic1" src="宋朝/直裰.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="pic1" src="宋朝/褙子1.jpg" style="width: 1025px; height: 576px; "/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+    <div class="layui-col-md7">
+      <!-- <img src="宋朝/褙子2.jpg" alt="" style="width: 800px; height: 800px; "> -->
+      <div class="layui-carousel " id="text4">
+        <div carousel-item>
+            <div><img src="宋朝/褡护1.jpg" style="width: 1025px; height: 576px; "/></div>
+            <div><img src="宋朝/襕衫.jpg" style="width: 1025px; height: 576px; "/></div>
+            <div><img src="宋朝/霞帔.jpg" style="width: 1025px; height: 576px; "/></div>
+            <!-- <div><img src="隋唐/隋唐-8.jpg" style="width: 899px; height: 500px; "/></div> -->
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md4"style="margin-top: 200px;">
+      <!-- <b>
+        <h1 style="font-size: 25px;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《醉垂鞭》</h1>
+      </b> -->
+      <p style="font-size: 20px;margin-left: 280px;">红藕香残玉簟秋。</p>
+      <p style="font-size: 20px;margin-left: 280px;">轻解罗裳，独上兰舟。</p>
+      <p style="font-size: 20px;margin-left: 280px;">云中谁寄锦书来，</p>
+      <p style="font-size: 20px;margin-left: 280px;">雁字回时，月满西楼。</p>
+    </div>
+  </div>
+
+  </div>
+
+  <div id="lyz7" hidden>
+    <a  target="_blank">
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md7">
+        <!-- <img src="明朝/云肩1.jpg" alt="" style="width: 500px; height: 900px; "> -->
+        <div class="layui-carousel " id="text3">
+          <div carousel-item>
+              <div><img class="ll" src="明朝/云肩.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="ll" src="明朝/披风.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="ll" src="明朝/鹤氅.jpg" style="width: 1025px; height: 576px; "/></div>
+          </div>
+        </div> 
+      </div>
+      <div class="layui-col-md4"style="margin-top: 200px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《赠兖州孟都督》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-left: 300px;">少年亲事冠军侯，</p>
+        <p style="font-size: 20px;margin-left: 300px;">中岁仍迁北兖州。</p>
+        <p style="font-size: 20px;margin-left: 300px;">露冕宁夸汉车服，</p>
+        <p style="font-size: 20px;margin-left: 300px;">下帷常讨鲁春秋。</p>
+      </div>
+    </div>
+
+
+    <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+      <div class="layui-col-md4"style="margin-top: 200px;">
+        <!-- <b>
+          <h1 style="font-size: 25px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《阴山女歌》</h1>
+        </b> -->
+        <p style="font-size: 20px;margin-right: 40px;">阴山女汉服，初裁泪如雨。</p>
+        <p style="font-size: 20px;margin-right: 40px;">自看颜色宜汉装，琵琶岂复传胡谱。</p>
+        <p style="font-size: 20px;margin-right: 40px;">赤车使者传琵琶，翩然雌凤随凰去。</p>
+        <p style="font-size: 20px;margin-right: 40px;">岂不怜此女儿心，父母生身远有祖。</p>
+      </div>
+      <div class="layui-col-md7">
+        <div class="layui-carousel " id="text1">
+          <div carousel-item>
+              <div><img class="ll" src="明朝/明-2.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="ll" src="明朝/明-3.jpg" style="width: 1025px; height: 576px; "/></div>
+              <div><img class="ll" src="明朝/比甲.jpg" style="width: 1025px; height: 576px; "/></div>
+              
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  
+
+
+  <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+    <div class="layui-col-md7">
+      <!-- <img src="明朝/云肩1.jpg" alt="" style="width: 500px; height: 900px; "> -->
+      <div class="layui-carousel " id="text2" >
+        <div carousel-item>
+            <div><img class="ll" src="明朝/立领衫.jpg" style="width: 1025px; height: 576px; "/></div>
+            <div><img class="ll" src="明朝/道袍.jpg" style="width: 1025px; height: 576px; "/></div>
+            <div><img class="ll" src="明朝/长袄.jpg" style="width: 1025px; height: 576px; "/></div>
+            
+            
+        </div>
+      </div>  
+    </div>
+
+    <div class="layui-col-md4"style="margin-top: 220px;">
+      <!-- <b>
+        <h1 style="font-size: 25px;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《方仙翁祠》</h1>
+      </b> -->
+      <p style="font-size: 20px;margin-left: 300px;">真仙祠馆锁层岚，</p>
+      <p style="font-size: 20px;margin-left: 300px;">下瞰平畴十里宽。</p>
+      <p style="font-size: 20px;margin-left: 300px;">谱牒尚标唐篆额，</p>
+      <p style="font-size: 20px;margin-left: 300px;">风仪仍是汉衣冠。</p>
+    </div>
+  </div>
+  <div class="layui-row" style="margin-top: 150px;margin-left: 300px; ">
+    <div class="layui-col-md4"style="margin-top: 250px;">
+      <!-- <b>
+        <h1 style="font-size: 25px;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《阴山女歌》</h1>
+      </b> -->
+      <p style="font-size: 20px;margin-left: 15px;">笛声来、一曲念家山，思归切。</p>
+      <p style="font-size: 20px;margin-left: 15px;">庆重生、再见汉衣冠，唐宫阙。</p>
+    </div>
+    <div class="layui-col-md7">
+      <div class="layui-carousel " id="text9">
+        <div carousel-item>
+          <div><img class="ll" src="明朝/明-1.jpg" style="width: 1025px; height: 576px; "/></div>
+          <div><img class="ll" src="明朝/沃裙.jpg" style="width: 1025px; height: 576px; "/></div>
+          <div><img class="ll" src="明朝/马面裙.jpg" style="width: 1025px; height: 576px; "/></div>
+          <div><img class="ll" src="明朝/斗篷.jpg" style="width: 1025px; height: 576px; "/></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+
+
+
+
+  <script>
+    $(function () {
+        $('#onepic').click(function () {
+            $('#lyz1').hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#twopic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").show();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#threepic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").show();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#npic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").show();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#fourpic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").show();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#fivepic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").show();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#epic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").show();
+            $("#lyz6").hide();
+            $("#lyz7").hide();
+        })
+        $("#sixpic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").show();
+            $("#lyz7").hide();
+        })
+        $("#sevenpic").click(function () {
+            $("#lyz1").hide();
+            $("#lyz2").hide();
+            $("#lyz3").hide();
+            $("#lyz4").hide();
+            $("#lyz5").hide();
+            $("#lyz6").hide();
+            $("#lyz7").show();
+        })
+    });
+    layui.use('carousel', function () {
+            var carousel = layui.carousel;
+            carousel.render({
+                elem: '.lyy520'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:10000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+        });
+
+        layui.use('carousel', function () {
+            var carousel = layui.carousel;
+            carousel.render({
+                elem: '#text2'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:30000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text1'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:25000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text3'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:28000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text4'
+                , width: '800px' 
+                , height: '450px'
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:30000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text5'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true'
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:28000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text6'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:25000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text7'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true'
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:30000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text8'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:28000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+            carousel.render({
+                elem: '#text9'
+                , width: '800px' 
+                , height: '450px' 
+                // , full:'true' 
+                 , arrow: 'always' 
+                ,anim: 'default'
+                ,indicator:'inside' 
+                ,interval:28000
+                ,width:'1025px'
+                ,height:'576px'
+            });
+        });
+
+</script>
+<script>
+$(function(){
+  $(".pic").click(function(){
+    $(".pic").css("height:1000px;weight:1600px")
+  })
+});
+document.addEventListener('DOMContentLoaded', function () {
+    function audioAutoPlay() {
+        var audio = document.getElementById('audio');
+            audio.play();
+        document.addEventListener("WeixinJSBridgeReady", function () {
+            audio.play();
+        }, false);
+    }
+    audioAutoPlay();
+});
+document.addEventListener('touchstart', function () {
+    function audioAutoPlay() {
+        var audio = document.getElementById('audio');
+            audio.play();
+    }
+    audioAutoPlay();
+});
+$(function() {
+		$("input[type=text]").change(function() {
+			var searchText = $(this).val(); //获取输入的搜索内容
+			var $searchLi = ""; //预备对象，用于存储匹配出的li
+			if(searchText != "") {
+				//获取所有匹配的li
+				$searchLi = $("#content_news_list").find('a:contains(' + searchText + ')').parent();
+				//将内容清空
+				$("#content_news_list").html("");
+			}
+			//将获取的元素追加到列表中
+			$("#content_news_list").html($searchLi).clone();
+			//判断搜索内容是否有效，若无效，输出not find
+			if($searchLi.length <= 0) {
+				$("#content_news_list").html("<li>not find</li>")
+			}
+		})
+		$("input[type=submit]").click(function() {
+			$("searchText").change();
+		})
+	})
+
+</script>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/plugins/CSSPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/plugins/TextPlugin.min.js"></script>
+  <script src="demo.js"></script>
+  <!-- <script src="beijin.js"></script> -->
+
+  <!-- <script src="http://www.lmlblog.com/winter/templets/xq/js/snowy.js"></script> -->
+<!-- <script src="http://www.lmlblog.com/blog/12/js/Snow.js"></script> -->
+<script src="snow.js"></script>
+<script src="snoy.js"></script>
+<style type="text/css">
+.snow-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100001;}
+</style>
+<div class="snow-container"></div>
+
+</body>
+
+</html>
